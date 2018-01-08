@@ -3,7 +3,7 @@ layout: post
 title: "Linux command line tools and tricks - Part 3"
 ---
 
-Here is another sequel to my [Linux command line tools and tricks - Part 1](http://varunbpatil.github.io/2012/09/19/linux-tricks) and [Linux command line tools and tricks - Part 2](http://varunbpatil.github.io/2012/10/01/linux-tricks-2) where I collect some of the most interesting command line tools and tricks from around the web. So, let's get started.
+Here is another sequel to my [Linux command line tools and tricks - Part 1]({% post_url 2012-09-19-linux-tricks %}) and [Linux command line tools and tricks - Part 2]({% post_url 2012-10-01-linux-tricks-2 %}) where I collect some of the most interesting command line tools and tricks from around the web. So, let's get started.
 
 #### Using webcam as a mirror
 
@@ -86,7 +86,7 @@ That's it. Now, restart Firefox, and you should see a cache file created in /dev
     $ sudo apt-get install feh
     $ feh --bg-fill <path to image>
 
-Can be used with startup scripts or login scripts. Especially useful in tiling window managers like [DWM](http://varunbpatil.github.io/2013/09/28/dwm) and [Xmonad](http://varunbpatil.github.io/2013/09/20/xmonad).
+Can be used with startup scripts or login scripts. Especially useful in tiling window managers like [DWM]({% post_url 2013-09-28-dwm %}).
 
 #### Faster sshfs
 
@@ -105,7 +105,7 @@ Notice we don't specify a username for the remote machine in the above command.
 
 #### Setting up a static IP via command line
 
-Especially useful when you are running lightweight window managers like [DWM](http://varunbpatil.github.io/2013/09/28/dwm) or [Xmonad](http://varunbpatil.github.io/2013/09/20/xmonad) and do not have a tray applet to control network connections.
+Especially useful when you are running lightweight window managers like [DWM]({% post_url 2013-09-28-dwm %}) and do not have a tray applet to control network connections.
 
     $ sudo ifconfig eth0 10.0.0.1 netmask 255.255.255.0 up
 

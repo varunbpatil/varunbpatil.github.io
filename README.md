@@ -1,4 +1,4 @@
-https://varunbpatil.github.io
-=============================
+{{ site.url }}
+==============
 
 Varun B Patil's blog
