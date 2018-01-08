@@ -1,1 +1,4 @@
-# varunbpatil.github.io
+https://varunbpatil.github.io
+=============================
+
+Varun B Patil's blog

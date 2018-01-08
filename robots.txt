@@ -1,0 +1,12 @@
+User-agent: *
+
+allow: /
+
+disallow: *.txt
+disallow: *.ico
+disallow: *.png
+disallow: *.jpg
+disallow: *.pdf
+disallow: *.svg
+
+Sitemap: {{ site.url }}/sitemap.xml
