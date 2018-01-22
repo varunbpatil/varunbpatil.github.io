@@ -3,6 +3,8 @@ layout: post
 title: "Coursera Video Downloader"
 ---
 
+__[UPDATE 22-JAN-2018]: You can now download videos for an entire course in one go__
+
 The video download link below a coursera lecture video for some reason always downloads the least quality video.
 So, I decided to write a simple `Python + Selenium + Requests` script to download high quality (720p) lecture videos from the Coursera course you have access to. This script automates the process of downloading and naming high quality videos from Coursera (with minimum user intervention).
 
@@ -10,7 +12,7 @@ Please note that this script is in no way designed to circumvent Coursera. You c
 
 You can get the code from [github](https://github.com/varunbpatil/Coursera_Video_Downloader) as well.
 
-NOTE: This script downloads all the lecture videos for a given week. So, the URL input to this script should be the Coursera page that contains the lecture videos for one week. For [example](https://www.coursera.org/learn/convolutional-neural-networks/home/week/1),
+NOTE: This script downloads all the lecture videos for ~~a given week~~ the entire course. The URL input to this script should be the Coursera page that contains the lecture videos for ~~one week~~ the first week. For [example](https://www.coursera.org/learn/convolutional-neural-networks/home/week/1),
 
 <img src="/assets/coursera.png" />
 
@@ -57,16 +59,29 @@ login.click()
 video_urls = []
 video_names = []
 
-link_objs = browser.find_elements_by_class_name('rc-ItemLink.nostyle')
+while True:
+    try:
+        browser.get(url)
+    except WebDriverException:
+        break
 
-for link in link_objs:
-    link_url  = link.get_attribute("href")
-    link_name = link_url.split('/')[-1]
-    link_type = link_url.split('/')[-3]
+    # Coursera redirects to week1 url if the week number is wrong
+    if browser.current_url != url:
+        break
 
-    if link_type == "lecture":
-        video_urls.append(link_url)
-        video_names.append(link_name)
+    link_objs = browser.find_elements_by_class_name('rc-ItemLink.nostyle')
+
+    for link in link_objs:
+        link_url  = link.get_attribute("href")
+        link_name = link_url.split('/')[-1]
+        link_type = link_url.split('/')[-3]
+
+        if link_type == "lecture":
+            video_urls.append(link_url)
+            video_names.append(link_name)
+
+    next_week = str(int(url.split('/')[-1]) + 1)
+    url = '/'.join(url.split('/')[:-1] + [next_week])
 
 
 # Download videos
@@ -117,7 +132,43 @@ password.send_keys("...")      # your password here
 
 Please modify this part with your Coursera account username and password.
 
+
 {% highlight python %}
+# Prepare a list of all the video hyperlinks
+video_urls = []
+video_names = []
+
+while True:
+    try:
+        browser.get(url)
+    except WebDriverException:
+        break
+
+    # Coursera redirects to week1 url if the week number is wrong
+    if browser.current_url != url:
+        break
+
+    link_objs = browser.find_elements_by_class_name('rc-ItemLink.nostyle')
+
+    for link in link_objs:
+        link_url  = link.get_attribute("href")
+        link_name = link_url.split('/')[-1]
+        link_type = link_url.split('/')[-3]
+
+        if link_type == "lecture":
+            video_urls.append(link_url)
+            video_names.append(link_name)
+
+    next_week = str(int(url.split('/')[-1]) + 1)
+    url = '/'.join(url.split('/')[:-1] + [next_week])
+{% endhighlight %}
+
+In this part of the code, we collect all the video URL's that need to be downloaded for all the weeks of the entire course.
+Note that Coursera redirects URL to week 1 if the week number in the URL is wrong. We use this knowledge to decide when to abort gathering video URL's once we have gathered video URL's for the entire course.
+
+
+{% highlight python %}
+# Download videos
 for i, (video_url, video_name) in enumerate(zip(video_urls, video_names)):
     browser.get(video_url)
     
@@ -138,7 +189,7 @@ for i, (video_url, video_name) in enumerate(zip(video_urls, video_names)):
     handle.close()
 {% endhighlight %}
 
-This is the main video download code. The for loop before this just creates a list of lecture videos to download for that week.
+This is the main video download code. The for loop before this just creates a list of lecture videos to download for ~~that week~~ the entire course.
 In this for loop, we actually download the videos. This particular step `requires user intervention` which is detailed below.
 
 
@@ -161,4 +212,4 @@ I haven't found a way to automate the video quality selection yet. Suggestions a
 
 If you're wondering, why use `selenium` and not `requests` library directly, it is because, the dynamic javascript rendering of the pages makes it difficult (impossible?) to get the inner HTML (video url's, etc) using plain HTTP requests.
 
-The script in its current version is capable of downloading only one week's worth of videos. I'm working on allowing it to download videos for an entire course.
+The script in its current version is capable of downloading ~~only one week's worth of videos~~ videos for the entire course. ~~I'm working on allowing it to download videos for an entire course~~.
