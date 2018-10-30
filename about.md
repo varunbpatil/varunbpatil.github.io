@@ -8,6 +8,8 @@ permalink: /about/
 
 Software Engineer at NetApp specializing in file system and storage efficiency technologies.
 
-Pythonista and aspiring machine learning engineer.
+Pythonista.
+
+Passionate about data science and machine learning.
 
 [Resume]({{ "/assets/resume.pdf" | absolute_url }})
