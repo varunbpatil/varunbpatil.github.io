@@ -7,7 +7,7 @@ Here is my __5th place solution__ to the
 [Genpact Machine Learning Hackathon](https://datahack.analyticsvidhya.com/contest/genpact-machine-learning-hackathon/pvt_lb)
 conducted by Analytics Vidhya in December 2018.
 
-The full Python code is available on [my github repository]().
+The full Python code is available on [my github repository](https://github.com/varunbpatil/ML-Hackathon/tree/master/Genpact_ML_Hackathon_Dec_2018).
 
 <br/>
 
@@ -150,7 +150,7 @@ by week and we want to take samples towards the end as our cross-validation set.
 
 #### Solution
 
-The full Python code is available on [my github repository]().
+The full Python code is available on [my github repository](https://github.com/varunbpatil/ML-Hackathon/tree/master/Genpact_ML_Hackathon_Dec_2018).
 
 <br/>
 __Read the training and test datasets.__
