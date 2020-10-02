@@ -213,3 +213,12 @@ pre {
     padding-top: 5px;
   }
 }
+
+
+table {
+  border-collapse: collapse;
+}
+table, th, td {
+  padding: 10px;
+  border: 1px solid black;
+}
