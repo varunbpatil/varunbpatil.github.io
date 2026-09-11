@@ -1,0 +1,95 @@
+---
+---
+
+@use 'abstracts/variables' with (
+  $theme: '{{ site.theme_mode }}'
+);
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+@use 'abstracts/variables' as v;
+
+/* font families */
+
+*:not([class*='fa-'], code, code *, pre, pre *) {
+  font-family: 'Cause' !important;
+  text-underline-offset: 4px !important;
+}
+
+:root {
+  --bs-font-monospace: 'Cascadia Code' !important;
+}
+
+/* font weights - light theme */
+
+:root[#{v.$theme-attr}='light'] *:not(i) {
+  font-weight: 500 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([#{v.$theme-attr}]) *:not(i) {
+    font-weight: 500 !important;
+  }
+}
+
+/* font weights - dark theme */
+
+:root[#{v.$theme-attr}='dark'] *:not(i) {
+  font-weight: 600 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([#{v.$theme-attr}]) *:not(i) {
+    font-weight: 600 !important;
+  }
+}
+
+/* dark theme colors */
+
+:root[#{v.$theme-attr}='dark'] {
+  --main-bg: rgb(14 14 16);
+  --sidebar-bg: #101013;
+  --topbar-bg: rgb(14 14 16 / 64%);
+  --card-bg: #111114;
+  --mask-bg: rgb(30 30 32);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([#{v.$theme-attr}]) {
+    --main-bg: rgb(14 14 16);
+    --sidebar-bg: #101013;
+    --topbar-bg: rgb(14 14 16 / 64%);
+    --card-bg: #111114;
+    --mask-bg: rgb(30 30 32);
+  }
+}
+
+/* table headers - light theme */
+
+:root[#{v.$theme-attr}='light'] .table-wrapper > table thead {
+  background-color: #e9ebee;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([#{v.$theme-attr}]) .table-wrapper > table thead {
+    background-color: #e9ebee;
+  }
+}
+
+/* table headers - dark theme */
+
+:root[#{v.$theme-attr}='dark'] .table-wrapper > table thead {
+  background-color: #1a1b1e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([#{v.$theme-attr}]) .table-wrapper > table thead {
+    background-color: #1a1b1e;
+  }
+}
