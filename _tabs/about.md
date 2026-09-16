@@ -1,8 +1,9 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 4
+order: 5
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+14+ years of experience across fintech, supply chain AI, enterprise storage and embedded systems - consistently working
+on high-performance, mission-critical software. Currently specializing in Go microservices, with deep expertise in the
+gRPC ecosystem, durable workflows and distributed systems.
