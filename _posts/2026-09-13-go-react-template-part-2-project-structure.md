@@ -1,5 +1,5 @@
 ---
-title: Go + React Template - PART 2 - Project Structure
+title: "Building a Type-Safe Go + React SPA, Part 2: Project Structure"
 date: 2026-09-13 10:00:00 +0530
 categories: [Software]
 tags: [Go, React, Protobufs, Buf connect, go-react-template]

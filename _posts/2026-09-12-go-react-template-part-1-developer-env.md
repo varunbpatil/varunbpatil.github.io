@@ -1,5 +1,5 @@
 ---
-title: Go + React Template - PART 1 - Developer Environment
+title: "Building a Type-Safe Go + React SPA, Part 1: Developer Environment"
 date: 2026-09-12 10:00:00 +0530
 categories: [Software]
 tags: [Go, React, Protobufs, Buf connect, go-react-template]
