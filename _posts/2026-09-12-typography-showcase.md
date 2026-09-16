@@ -1,6 +1,6 @@
 ---
 title: Typography Showcase
-date: 2026-09-11 10:00:00 +0530
+date: 2026-09-12 10:00:00 +0530
 categories: [Design]
 tags: [typography, showcase]
 description: A test post showing how Cause and Cascadia Code look with various elements.
