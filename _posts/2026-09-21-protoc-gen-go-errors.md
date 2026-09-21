@@ -1,5 +1,5 @@
 ---
-title: "Typed Go Errors, Generated from Your Protobufs"
+title: "protoc-gen-go-errors: Typed Go Errors, Generated from Your Protobufs"
 date: 2026-09-21 10:00:00 +0530
 categories: [Software]
 tags: [Go, Protobufs, Buf, Error handling, protoc-gen-go-errors]
