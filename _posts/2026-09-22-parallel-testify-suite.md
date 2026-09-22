@@ -69,6 +69,30 @@ In the original suite, the "parent" is the suite's `Run` function. So with paral
 
 Teardown before the tests have even started. This is precisely why [Go 1.14 introduced `testing.T.Cleanup`](https://pkg.go.dev/testing#T.Cleanup): cleanup functions are guaranteed to run only after the test *and all of its parallel subtests* have completed. `defer` cannot give you that ordering; `Cleanup` can.
 
+## What about TestMain?
+
+The knee-jerk answer to all of this is "don't use a suite, write it by hand with the stdlib's `TestMain`". That gets you exactly one thing - package-level setup and teardown:
+
+```go
+func TestMain(m *testing.M) {
+	setUpDatabase()
+	code := m.Run()
+	tearDownDatabase() // runs after every test, parallel ones included
+	os.Exit(code)
+}
+```
+
+(Note the teardown runs *before* `os.Exit` - `os.Exit` skips deferred functions, so `defer tearDownDatabase()` here would never run.)
+
+But the suite-shaped problems are all still yours:
+
+- **Only one `TestMain` per package.** Two declarations is a compile error. A package with several suites has to funnel every one of them through a single main, and routing several unrelated setups through it is yours to manage.
+- **Forgetting `os.Exit` is a silent pass.** If `TestMain` returns without calling it, the binary exits 0 having run nothing.
+- **No per-test structure.** `SetupTest`/`TearDownTest`, assertions, and test grouping are hand-rolled in every test function. There is no `-run Package/TestGroup/Subtest` hierarchy - you get a flat list of tests and build the rest yourself.
+- **Per-test teardown ordering is unsolved.** `TestMain` fixes package-level teardown, but inside a test function relying on `defer` hits the exact same parallel-subtest problem - you'd still reach for `t.Cleanup`, by hand, in every single test.
+
+So `TestMain` is the right tool when you have *one* piece of shared setup for a package. The moment you structure tests into groups with per-test and per-subtest lifecycle, you are reimplementing the suite - badly, and one bug at a time.
+
 ## The fix: an instance per test, teardown via Cleanup
 
 The fix has two parts, and generics make the first one possible.
