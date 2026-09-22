@@ -197,15 +197,45 @@ func (e *CheckoutError) Error() string {
 ```
 {: file="gen/checkout/v1/checkout.errors.pb.go (excerpt)"}
 
-Plus a type-safe constructor per alternative:
+Plus a uniform `From()` constructor that wraps any of the sum's own leaves:
 
 ```go
-func (e *CheckoutError) FromPaymentDeclinedError(leaf *PaymentDeclinedError) *CheckoutError {
-	return &CheckoutError{Kind: &CheckoutError_PaymentDeclined{
-		PaymentDeclined: leaf,
-	}}
+type fromCheckoutError interface {
+	error
+	proto.Message
+	checkoutErrorMarker()
+}
+
+func (e *CheckoutError) From(leaf fromCheckoutError) *CheckoutError {
+	switch v := leaf.(type) {
+	case *InsufficientStockError:
+		return &CheckoutError{Kind: &CheckoutError_InsufficientStock{
+			InsufficientStock: v,
+		}}
+	case *PaymentDeclinedError:
+		return &CheckoutError{Kind: &CheckoutError_PaymentDeclined{
+			PaymentDeclined: v,
+		}}
+	case *CouponInvalidError:
+		return &CheckoutError{Kind: &CheckoutError_CouponInvalid{
+			CouponInvalid: v,
+		}}
+	case *OtherError:
+		return &CheckoutError{Kind: &CheckoutError_Other{
+			Other: v,
+		}}
+	default:
+		panic(fmt.Sprintf("protoc-gen-go-errors: %T is not one of the error messages of CheckoutError", leaf))
+	}
 }
 ```
+
+The argument is typed against an unexported interface that only `CheckoutError`'s
+own leaves satisfy - each leaf implements a private `checkoutErrorMarker()` to
+opt in. Hand it an `InsufficientStockError` and it compiles; hand it a leaf of
+some other sum error and the compiler stops you instead of a runtime panic. The
+per-alternative `FromPaymentDeclinedError(...)` constructors are still generated
+if you prefer to spell out the variant.
 
 And the leaves come out like this:
 
@@ -220,6 +250,8 @@ func (e *PaymentDeclinedError) Unwrap() error {
 	}
 	return nil
 }
+
+func (*PaymentDeclinedError) checkoutErrorMarker() {}
 ```
 
 One detail I am fond of: the generated `Unwrap` never returns a typed nil. A hand-written `return e.GetGateway()` returns a non-nil `error` interface wrapping a nil pointer, and `errors.As` behaves like a toddler with a heartbeat monitor. The nil guard is the difference between "works" and "works until a nil cause shows up in production".
@@ -254,11 +286,11 @@ import (
 
 func (s *CheckoutService) Checkout(ctx context.Context, req *CheckoutRequest) g.Result[*CheckoutResponse, *checkoutv1.CheckoutError] {
 	if err := s.validateCoupon(req.GetCoupon()); err != nil {
-		return g.Err[*CheckoutResponse](new(checkoutv1.CheckoutError).FromCouponInvalidError(err))
+		return g.Err[*CheckoutResponse](new(checkoutv1.CheckoutError).From(err))
 	}
 
 	if err := s.gateway.Charge(ctx, req); err != nil {
-		declined := new(checkoutv1.CheckoutError).FromPaymentDeclinedError(
+		declined := new(checkoutv1.CheckoutError).From(
 			&checkoutv1.PaymentDeclinedError{TransactionId: req.GetTxId(), Gateway: err},
 		)
 		return g.Err[*CheckoutResponse](declined)

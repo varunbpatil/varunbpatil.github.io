@@ -1,5 +1,8 @@
 name: "Build and Deploy"
 on:
+  # Build and deploy automatically on every push to main.
+  push:
+    branches: [main]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
