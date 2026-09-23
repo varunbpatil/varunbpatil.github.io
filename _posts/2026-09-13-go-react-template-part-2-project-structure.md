@@ -32,7 +32,7 @@ This is the project structure I use for all my projects. It is a variation of th
 │
 ├── config/                    # App configuration
 ├── mocks/                     # Generated GoMock implementations
-├── types/                     # Custom type definitions
+├── shared/                    # Shared code
 │
 ├── protos/                    # Protobuf definitions
 │   ├── src/                   # Proto source files
@@ -219,7 +219,7 @@ func run() {
     onFatal := func(err error) { logger.Error("fatal service error", "error", err); cancel() }
 
     // Lifecycle manager
-    lm := types.NewManager(logger)
+    lm := shared.NewLifecycleManager(logger)
     defer func() { cancel(); lm.StopAll(shutdownTimeout) }()
 
     // Setup users repository
@@ -257,7 +257,7 @@ Curious folk might ask why `main()` needs to call `run()`? The reason is that yo
 
 Another nice thing you will notice about the naming convention is that all the constructors (adapters and domain services) are named `New`. There is no need to come up with names. The package name already namespaces it. Also notice how `http` is the adapter package, not the stdlib package.
 
-Without question, the most important part of `main.go`{: .filepath} is the graceful shutdown handling. This is managed by the aptly named [Lifecycle Manager](https://github.com/varunbpatil/go-react-template/blob/main/types/lifecycle.go). It provides two methods to register your services:
+Without question, the most important part of `main.go`{: .filepath} is the graceful shutdown handling. This is managed by the aptly named [Lifecycle Manager](https://github.com/varunbpatil/go-react-template/blob/main/shared/lifecycle.go). It provides two methods to register your services:
 
 - `AddCloser()` for simple services where resources are allocated during construction and need to be released during shutdown.
 - `Add()` for long-running services (known as daemon's) which need to be started separately after construction and need to be stopped during shutdown.
@@ -279,7 +279,7 @@ func run() {
 
     // Setup users repository
     usersRepo, err := usersRepository.New(Params{
-        schema: func() types.Schema { return usersSvc.Schema() }
+        schema: func() shared.Schema { return usersSvc.Schema() }
     })
 
     // Setup users service
